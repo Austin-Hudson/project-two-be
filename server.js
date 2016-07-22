@@ -119,12 +119,13 @@ app.post('/restaurant/search', function(req, res) {
 
 app.post('/restaurants', function(req, res) {
   var restaurant = req.body;
-  // db.collection(RESTAURANT_COLLECTION.find(restaurant, function(err, doc){
-  //   if (err) {
-  //       handleError(response, err.message, "Failed to add new character.");
-  //     } else {
-  //       res.status(201).json(doc);
-  // })
+  var name = restaurtant.name;
+  db.collection(RESTAURANT_COLLECTION.find({name: name}, function(err, doc){
+    if (err) {
+        handleError(response, err.message, "Failed to add new character.");
+      } else {
+        res.status(201).json(doc);
+  })
  //insert comment to restaurant
   //  db.collection(RESTAURANT_COLLECTION).update(restaurant, function(err, doc) {
   //   if (err) {
