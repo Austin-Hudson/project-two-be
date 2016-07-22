@@ -37,7 +37,8 @@ var s3 = new aws.S3();
 var RESTAURANT_COLLECTION = 'restaurants';
 
 // connect to the database server!
-var url = 'mongodb://localhost:27017/food_app'
+var url = 'mongodb://heroku_5tbqgz7w:72qn927dh6r56asdknkjvo9tha@ds027425.mlab.com:27425/heroku_5tbqgz7w'
+
 mongodb.MongoClient.connect(process.env.MONGODB_URI || url, function (err, database) {
   if (err) {
     console.log(err);
@@ -49,7 +50,7 @@ mongodb.MongoClient.connect(process.env.MONGODB_URI || url, function (err, datab
   console.log("Database connection ready");
 
   // Initialize the app. another way to start a server in express
-  var server = app.listen(process.env.PORT || 3000, function () {
+  var server = app.listen(process.env.PORT || 80 || 3000, function () {
     var port = server.address().port;
     console.log("App now running on port", port);
   });
