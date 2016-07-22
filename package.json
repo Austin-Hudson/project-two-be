@@ -1,0 +1,31 @@
+{
+  "name": "project-two",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Austin-Hudson/Project-Two.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Austin-Hudson/Project-Two/issues"
+  },
+  "homepage": "https://github.com/Austin-Hudson/Project-Two#readme",
+  "dependencies": {
+    "aws-sdk": "^2.4.8",
+    "body-parser": "^1.15.2",
+    "busboy-body-parser": "^0.1.0",
+    "cors": "^2.7.1",
+    "express": "^4.14.0",
+    "mongodb": "^2.2.4",
+    "request": "^2.73.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.9.1"
+  }
+}
