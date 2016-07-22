@@ -136,7 +136,7 @@ app.post('/restaurants', function(req, res) {
 });
 
 app.get("/restaurants/:name", function(request, response) {
-  var id = request.params.name;
+  var name = request.params.name;
 
   db.collection(RESTAURANT_COLLECTION).find({name: name}, function(err, doc) {
     if (err) {
