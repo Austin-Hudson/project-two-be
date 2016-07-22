@@ -50,7 +50,7 @@ mongodb.MongoClient.connect(process.env.MONGODB_URI || url, function (err, datab
   console.log("Database connection ready");
 
   // Initialize the app. another way to start a server in express
-  var server = app.listen(process.env.PORT || 80 || 3000, function () {
+  var server = app.listen(process.env.PORT || 3000 || 80, function () {
     var port = server.address().port;
     console.log("App now running on port", port);
   });
@@ -117,18 +117,51 @@ app.post('/restaurant/search', function(req, res) {
 
 }); // end post request
 
-app.post('/restaurants/', function(req, res) {
-  var newRestaurant = req.body;
+app.post('/restaurants', function(req, res) {
+  var restaurant = req.body;
+  // db.collection(RESTAURANT_COLLECTION.find(restaurant, function(err, doc){
+  //   if (err) {
+  //       handleError(response, err.message, "Failed to add new character.");
+  //     } else {
+  //       res.status(201).json(doc);
+  // })
+ //insert comment to restaurant
+  //  db.collection(RESTAURANT_COLLECTION).update(restaurant, function(err, doc) {
+  //   if (err) {
+  //     handleError(response, err.message, "Failed to add new character.");
+  //   } else {
+  //     res.status(201).json(doc);
+  //   }
+  // });
+});
 
- //insert one new restaurnt
-   db.collection(RESTAURANT_COLLECTION).insert(newRestaurant, function(err, doc) {
+app.get("/restaurants/:name", function(request, response) {
+  var id = request.params.name;
+
+  db.collection(RESTAURANT_COLLECTION).find({name: name}, function(err, doc) {
     if (err) {
-      handleError(response, err.message, "Failed to add new character.");
+      handleError(response, err.message, "Failed to get restaurant");
     } else {
-      res.status(201).json(doc);
+      response.status(200).json(doc);
     }
   });
+
 });
+
+//
+// app.get('/restaurants/:name', function(req, res) {
+//   var name = req.params.name
+//   console.log(name);
+//  //find restaurnt with comments
+//    db.collection(RESTAURANT_COLLECTION).findOne({name: name}, function(err, doc) {
+//     if (err) {
+//       handleError(response, err.message, "Failed to add new character.");
+//     } else {
+//       console.log(doc);
+//       res.status(200).json(JSON.stringify(doc));
+//     }
+//   });
+// });
 
 // when things go wrong
 function handleError(res, reason, message, code) {
