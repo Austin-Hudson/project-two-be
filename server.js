@@ -139,7 +139,7 @@ app.post('/restaurants', function(req, res) {
 app.get("/restaurants/:name", function(request, response) {
   var name = request.params.name;
 
-  db.collection(RESTAURANT_COLLECTION).find({name: name}, function(err, doc) {
+  db.collection(RESTAURANT_COLLECTION).findOne({name: name}, function(err, doc) {
     if (err) {
       handleError(response, err.message, "Failed to get restaurant");
     } else {
