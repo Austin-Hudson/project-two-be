@@ -37,8 +37,8 @@ var s3 = new aws.S3();
 var RESTAURANT_COLLECTION = 'restaurants';
 
 // connect to the database server!
-var url = 'mongodb://heroku_5tbqgz7w:72qn927dh6r56asdknkjvo9tha@ds027425.mlab.com:27425/heroku_5tbqgz7w'
-
+//var url = 'mongodb://heroku_5tbqgz7w:72qn927dh6r56asdknkjvo9tha@ds027425.mlab.com:27425/heroku_5tbqgz7w'
+var url = "mongodb://localhost:27017/food_app"
 mongodb.MongoClient.connect(process.env.MONGODB_URI || url, function (err, database) {
   if (err) {
     console.log(err);
@@ -88,8 +88,6 @@ app.get("/restaurants/img", function(req, res){
       res.end();
   })
 })
-
-
 /* restaurant search */
 app.post('/restaurant/search', function(req, res) {
 
@@ -116,26 +114,45 @@ app.post('/restaurant/search', function(req, res) {
   })
 
 }); // end post request
+//update restaurant comment
+app.put('/restaurants/:name', function(request, response) {
+    var old = {name: request.body.name};
+    var updateTo = request.body.comments;
+    var updatedComments = [];
 
-app.post('/restaurants', function(req, res) {
-  var restaurant = req.body;
-  var name = restaurant.name;
-  // db.collection(RESTAURANT_COLLECTION.find({name: name}, function(err, doc){
-  //   if (err) {
-  //       handleError(response, err.message, "Failed to add new character.");
-  //     } else {
-  //       res.status(201).json(doc);
-  // })
- //insert comment to restaurant
-  //  db.collection(RESTAURANT_COLLECTION).update(restaurant, function(err, doc) {
-  //   if (err) {
-  //     handleError(response, err.message, "Failed to add new character.");
-  //   } else {
-  //     res.status(201).json(doc);
-  //   }
-  // });
-});
+      db.collection(RESTAURANT_COLLECTION).find(old).toArray(function(err, doc){
+        if (err){
+          console.log("Error: ", err);
+        }
+        else {
+            if(doc.length != 0){
+              for(var i = 0; i < doc[0].comments.length; i++){
+                  updatedComments.push(doc[0].comments[i]);
+              }
+            }
+            updatedComments.push(updateTo.pop());
 
+            db.collection(RESTAURANT_COLLECTION).update(old ,{$set:{comments: updatedComments}}, {upsert: true},function (err, result) {
+              console.log("comments", updatedComments);
+              console.log("old:", old);
+              if (err) {
+                console.log("ERROR!", err);
+                response.json("error");
+              } else if (result.length) {
+                console.log('Found:', result);
+                response.json(result);
+              } else { //
+                console.log('No document(s) found with defined "find" criteria');
+                response.json("none found");
+              }
+
+            }); // end find
+        }
+      })
+
+  }); // end update
+
+//find a restaurant
 app.get("/restaurants/:name", function(request, response) {
   var name = request.params.name;
 
@@ -143,27 +160,49 @@ app.get("/restaurants/:name", function(request, response) {
     if (err) {
       handleError(response, err.message, "Failed to get restaurant");
     } else {
-      response.status(200).json(doc);
+      response.status(200).json(JSON.stringify(doc));
     }
   });
 
 });
 
-//
-// app.get('/restaurants/:name', function(req, res) {
-//   var name = req.params.name
-//   console.log(name);
-//  //find restaurnt with comments
-//    db.collection(RESTAURANT_COLLECTION).findOne({name: name}, function(err, doc) {
-//     if (err) {
-//       handleError(response, err.message, "Failed to add new character.");
-//     } else {
-//       console.log(doc);
-//       res.status(200).json(JSON.stringify(doc));
-//     }
-//   });
-// });
+//delete comment
+app.delete("/restaurants/:name", function(request, response){
+  var name = {name: request.body.name};
+  var commentToDelete = request.body.comment;
+  var updatedComments = [];
 
+    db.collection(RESTAURANT_COLLECTION).find(name).toArray(function(err, doc){
+      if (err){
+        console.log("Error: ", err);
+      }
+      else {
+          if(doc.length != 0){
+            //create updated comments
+            for(var i = 0; i < doc[0].comments.length; i++){
+                updatedComments.push(doc[0].comments[i]);
+            }
+            //spice it out
+            var commentIndex = updatedComments.indexOf(commentToDelete);
+            updatedComments.splice(commentIndex, 1);
+          }
+          //console.log(updatedComments);
+          db.collection(RESTAURANT_COLLECTION).update(name ,{$set:{comments: updatedComments}}, {upsert: true},function (err, result) {
+            if (err) {
+              console.log("ERROR!", err);
+              response.json("error");
+            } else if (result.length) {
+              console.log('Found:', result);
+              response.json(result);
+            } else { //
+              console.log('No document(s) found with defined "find" criteria');
+              response.json("none found");
+            }
+          }); // end find
+      }
+    })
+
+});
 // when things go wrong
 function handleError(res, reason, message, code) {
   console.log("ERROR: " + reason);
