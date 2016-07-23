@@ -35,6 +35,7 @@ var s3 = new aws.S3();
 // });
 
 var RESTAURANT_COLLECTION = 'restaurants';
+var RESTAURANT_FAV_COLLECTION = 'restaurant_favs'
 
 // connect to the database server!
 //var url = 'mongodb://heroku_5tbqgz7w:72qn927dh6r56asdknkjvo9tha@ds027425.mlab.com:27425/heroku_5tbqgz7w'
@@ -68,17 +69,25 @@ app.post("/upload", function (req, res) {
   });
 });
 //get image and send it
-app.get("/restaurants/img", function(req, res){
+app.post("/restaurants/img", function(req, res){
+  var files = req.body.files;
   var params = {Bucket: "project-two-restaurants"};
   s3.listObjects(params, function(err, data){
+    console.log(data);
     var bucketContents = data.Contents;
     var urls = [];
     for(var i=0; i < bucketContents.length; i++){
-      var urlParams = {Bucket: 'project-two-restaurants', Key: bucketContents[i].Key};
-      s3.getSignedUrl('getObject', urlParams, function(err, url){
-        //console.log("url", url);
-        urls.push(url);
-      })
+      //if the file is corresponded to the restaurant
+      if(files != undefined){
+        if(files.indexOf(bucketContents[i].Key) != -1){
+          var urlParams = {Bucket: 'project-two-restaurants', Key: bucketContents[i].Key};
+          s3.getSignedUrl('getObject', urlParams, function(err, url){
+            //console.log("url", url);
+            urls.push(url);
+          })
+        }
+      }
+
     }
       var returnedData = {
         urls: urls
@@ -165,7 +174,42 @@ app.get("/restaurants/:name", function(request, response) {
   });
 
 });
+//save a restaurant with image name
+app.post("/restaurant/:name", function(request, response){
+  var name = request.params.name;
+  var fileName = request.body.fileName;
+  console.log(name, fileName);
 
+  var restaurantInfo = {
+    name: name,
+    fileName: fileName
+  }
+
+  db.collection(RESTAURANT_FAV_COLLECTION).insert(restaurantInfo, function (err, result) {
+       if (err) {
+         console.log(err);
+         response.json("error");
+       } else {
+         console.log('Inserted.');
+         console.log('RESULT!!!!', result);
+         console.log("end result");
+         response.json(result);
+       }
+    });
+
+});
+//get the images corresponding to the restaurnt
+app.get("/restaurants/favorite/:name", function(request, response){
+    var restaurantName = request.params.name;
+
+    db.collection(RESTAURANT_FAV_COLLECTION).find({name: restaurantName}).toArray(function(err, doc) {
+      if (err) {
+        handleError(response, err.message, "Failed to get restaurant");
+      } else {
+        response.status(200).json(doc);
+      }
+    })
+});
 //delete comment
 app.delete("/restaurants/:name", function(request, response){
   var name = {name: request.body.name};
