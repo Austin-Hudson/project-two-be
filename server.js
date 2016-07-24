@@ -181,7 +181,7 @@ app.get("/restaurants/:name", function(request, response) {
 
 });
 //save a restaurant with image name
-app.post("/restaurant/:name", function(request, response){
+app.post("/restaurant/favorites/:name", function(request, response){
   var name = request.params.name;
   var fileName = request.body.fileName;
   console.log(name, fileName);
