@@ -145,7 +145,7 @@ app.post('/restaurants/:name', function(request, response) {
                 //push new comment
                 updatedComments.push(newComment.pop());
                 console.log("UC: ", updatedComments);
-
+            }
 
             db.collection(RESTAURANT_COLLECTION).update(old ,{$set:{comments: updatedComments}}, {upsert: true},function (err, result) {
               console.log("comments", updatedComments);
@@ -163,7 +163,6 @@ app.post('/restaurants/:name', function(request, response) {
 
             }); // end find
         }
-      }
       })
 
   }); // end update
