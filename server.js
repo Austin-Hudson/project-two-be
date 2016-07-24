@@ -93,7 +93,7 @@ app.post("/restaurants/img", function(req, res){
         urls: urls
       }
       console.log("Returned Data:", returnedData);
-      res.json(returnedData);
+      res.jsonp(returnedData);
       res.end();
   })
 })
@@ -175,7 +175,7 @@ app.get("/restaurants/:name", function(request, response) {
     if (err) {
       handleError(response, err.message, "Failed to get restaurant");
     } else {
-      response.status(200).json(JSON.stringify(doc));
+      response.status(200).jsonp(JSON.stringify(doc));
     }
   });
 
@@ -194,12 +194,12 @@ app.post("/restaurant/:name", function(request, response){
   db.collection(RESTAURANT_FAV_COLLECTION).insert(restaurantInfo, function (err, result) {
        if (err) {
          console.log(err);
-         response.json("error");
+         response.jsonp("error");
        } else {
          console.log('Inserted.');
          console.log('RESULT!!!!', result);
          console.log("end result");
-         response.json(result);
+         response.jsonp(result);
        }
     });
 
@@ -212,7 +212,7 @@ app.get("/restaurants/favorite/:name", function(request, response){
       if (err) {
         handleError(response, err.message, "Failed to get restaurant");
       } else {
-        response.status(200).json(doc);
+        response.status(200).jsonp(doc);
       }
     })
 });
@@ -240,13 +240,13 @@ app.delete("/restaurants/:name", function(request, response){
           db.collection(RESTAURANT_COLLECTION).update(name ,{$set:{comments: updatedComments}}, {upsert: true},function (err, result) {
             if (err) {
               console.log("ERROR!", err);
-              response.json("error");
+              response.jsonp("error");
             } else if (result.length) {
               console.log('Found:', result);
-              response.json(result);
+              response.jsonp(result);
             } else { //
               console.log('No document(s) found with defined "find" criteria');
-              response.json("none found");
+              response.jsonp("none found");
             }
           }); // end find
       }
@@ -256,5 +256,5 @@ app.delete("/restaurants/:name", function(request, response){
 // when things go wrong
 function handleError(res, reason, message, code) {
   console.log("ERROR: " + reason);
-  res.status(code || 500).json({"error": message});
+  res.status(code || 500).jsonp({"error": message});
 }
