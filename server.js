@@ -124,7 +124,7 @@ app.post('/restaurant/search', function(req, res) {
 
 }); // end post request
 //update restaurant comment
-app.post('/restaurants/:name', function(request, response) {
+app.put('/restaurants/:name', function(request, response) {
     var old = {name: request.body.name};
     var newComment = request.body.comments;
     var updatedComments = [];
@@ -181,7 +181,7 @@ app.get("/restaurants/:name", function(request, response) {
 
 });
 //save a restaurant with image name
-app.post("/restaurant/favorites/:name", function(request, response){
+app.post("/restaurant/:name", function(request, response){
   var name = request.params.name;
   var fileName = request.body.fileName;
   console.log(name, fileName);
