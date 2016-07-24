@@ -128,7 +128,6 @@ app.post('/restaurants/:name', function(request, response) {
     var old = {name: request.body.name};
     var newComment = request.body.comments;
     var updatedComments = [];
-    console.log("NEW COMMENT", newComment);
 
       db.collection(RESTAURANT_COLLECTION).find(old).toArray(function(err, doc){
         if (err){
