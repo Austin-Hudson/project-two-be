@@ -17,6 +17,13 @@ app.use(bodyParser.urlencoded({extended: true}));
 //set limit to the upload
 app.use(busboyBodyParser({ limit: '5mb' }));
 
+app.all('*', function(req, res, next) {
+       res.header("Access-Control-Allow-Origin", "*");
+       res.header("Access-Control-Allow-Headers", "X-Requested-With");
+       res.header('Access-Control-Allow-Headers', 'Content-Type');
+       next();
+});
+
 //aws setup
 aws.config.update({
   accessKeyId: process.env.aws_access_key_id,
