@@ -97,6 +97,30 @@ app.post("/restaurants/img", function(req, res){
       res.end();
   })
 })
+
+app.post('/restaurants/', function(req, res){
+
+  var restaurant= {
+            name: req.body.name,
+            address: req.body.address,
+            rating: req.body.rating,
+            comments: req.body.comments
+          };
+
+  db.collection(RESTAURANT_COLLECTION).insert(restaurant, function (err, result) {
+       if (err) {
+         console.log(err);
+         res.json("error");
+       } else {
+         console.log('Inserted.');
+         console.log('RESULT!!!!', result);
+         console.log("end result");
+         res.json(result);
+       }
+  });
+
+});
+
 /* restaurant search */
 app.post('/restaurant/search', function(req, res) {
 
@@ -122,6 +146,8 @@ app.post('/restaurant/search', function(req, res) {
     }
   })
 
+
+
 }); // end post request
 //update restaurant comment
 app.put('/restaurants/:name', function(request, response) {
@@ -134,8 +160,7 @@ app.put('/restaurants/:name', function(request, response) {
           console.log("Error: ", err);
         }
         else {
-
-            if(doc[0].comments.length == 0){
+            if(doc[0].comments.length == 0 || doc[0].comments == null){
                 updatedComments.push(newComment.pop());
             }
             else {
@@ -147,7 +172,8 @@ app.put('/restaurants/:name', function(request, response) {
                 updatedComments.push(newComment.pop());
                 console.log("UC: ", updatedComments);
             }
-        }
+          }
+
 
         db.collection(RESTAURANT_COLLECTION).update(old ,{$set:{comments: updatedComments}}, {upsert: true},function (err, result) {
           console.log("comments", updatedComments);
@@ -162,9 +188,10 @@ app.put('/restaurants/:name', function(request, response) {
             console.log('No document(s) found with defined "find" criteria');
             response.json("none found");
           }
+      })
 
         }); // end find
-      })
+
 
   }); // end update
 
