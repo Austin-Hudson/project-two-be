@@ -126,7 +126,7 @@ app.post('/restaurant/search', function(req, res) {
 //update restaurant comment
 app.put('/restaurants/:name', function(request, response) {
     var old = {name: request.body.name};
-    var updateTo = request.body.comments;
+    var newComment = request.body.comments;
     var updatedComments = [];
 
       db.collection(RESTAURANT_COLLECTION).find(old).toArray(function(err, doc){
@@ -134,12 +134,18 @@ app.put('/restaurants/:name', function(request, response) {
           console.log("Error: ", err);
         }
         else {
-            if(doc.length != 0){
+            if(doc[0].comments.length == 0){
+                updatedComments.push(newComment.pop());
+            }
+            else {
+              //push old comments
               for(var i = 0; i < doc[0].comments.length; i++){
                   updatedComments.push(doc[0].comments[i]);
               }
+                //push new comment
+                updatedComments.push(newComment.pop());
+                console.log("UC: ", updatedComments);
             }
-            updatedComments.push(updateTo.pop());
 
             db.collection(RESTAURANT_COLLECTION).update(old ,{$set:{comments: updatedComments}}, {upsert: true},function (err, result) {
               console.log("comments", updatedComments);
