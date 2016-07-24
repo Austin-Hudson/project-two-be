@@ -118,13 +118,13 @@ app.post('/restaurant/search', function(req, res) {
     callback: function(error, response, body) {
       // console.log(body);
       // console.log(response);
-      res.json(body);
+      res.send(body);
     }
   })
 
 }); // end post request
 //update restaurant comment
-app.post('/restaurants/:name', function(request, response) {
+app.put('/restaurants/:name', function(request, response) {
     var old = {name: request.body.name};
     var newComment = request.body.comments;
     var updatedComments = [];
