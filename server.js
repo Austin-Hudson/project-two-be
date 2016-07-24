@@ -38,8 +38,8 @@ var RESTAURANT_COLLECTION = 'restaurants';
 var RESTAURANT_FAV_COLLECTION = 'restaurant_favs'
 
 // connect to the database server!
-//var url = 'mongodb://heroku_5tbqgz7w:72qn927dh6r56asdknkjvo9tha@ds027425.mlab.com:27425/heroku_5tbqgz7w'
-var url = "mongodb://localhost:27017/food_app"
+var url = 'mongodb://heroku_5tbqgz7w:72qn927dh6r56asdknkjvo9tha@ds027425.mlab.com:27425/heroku_5tbqgz7w'
+//var url = "mongodb://localhost:27017/food_app"
 mongodb.MongoClient.connect(process.env.MONGODB_URI || url, function (err, database) {
   if (err) {
     console.log(err);
