@@ -152,13 +152,13 @@ app.put('/restaurants/:name', function(request, response) {
               console.log("old:", old);
               if (err) {
                 console.log("ERROR!", err);
-                response.json("error");
+                response.jsonp("error");
               } else if (result.length) {
                 console.log('Found:', result);
-                response.json(result);
+                response.jsonp(result);
               } else { //
                 console.log('No document(s) found with defined "find" criteria');
-                response.json("none found");
+                response.jsonp("none found");
               }
 
             }); // end find
