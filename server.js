@@ -118,7 +118,7 @@ app.post('/restaurant/search', function(req, res) {
     callback: function(error, response, body) {
       // console.log(body);
       // console.log(response);
-      res.send(body);
+      res.json(body);
     }
   })
 
