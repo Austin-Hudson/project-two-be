@@ -188,7 +188,7 @@ app.put('/restaurants/:name', function(request, response) {
           }
       })
 
-        }); // end find
+    }); // end find
 
 
   }); // end update
