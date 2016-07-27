@@ -157,7 +157,7 @@ app.put('/restaurants/:name', function(request, response) {
         if (err){
           console.log("Error: ", err);
         }
-        else {
+        else {//cehck if it's null
             if(doc[0].comments == null){
                 updatedComments.push(newComment.pop());
             }
